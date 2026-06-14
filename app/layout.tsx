@@ -25,11 +25,17 @@ export const metadata = {
     "wheel spinner",
     "food wheel",
     "name picker",
-    "bytespin",
+    "bytespin"
   ],
 
   icons: {
     icon: "/logo.png",
+  },
+
+  verification: {
+    other: {
+      "google-adsense-account": "ca-pub-4162936079798609",
+    },
   },
 };
 
