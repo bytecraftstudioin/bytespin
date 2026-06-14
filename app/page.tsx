@@ -256,13 +256,13 @@ export default function Home() {
 
     <div className="flex flex-wrap gap-6 mt-6 text-gray-400">
 
-      <a href="#">Home</a>
+      <a href="/about">About Us</a> 
+  
+      <a href="/privacy">Privacy Policy</a>
 
-      <a href="#">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
 
-      <a href="#">Terms of Service</a>
-
-      <a href="#">Contact</a>
+      <a href="/contact">Contact</a>
 
     </div>
 
