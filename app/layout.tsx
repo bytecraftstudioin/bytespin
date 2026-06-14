@@ -60,6 +60,12 @@ export default function RootLayout({
             gtag('config', 'G-VEG9ZSP6NK');
           `}
         </Script>
+      <Script
+  async
+  strategy="afterInteractive"
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4162936079798609"
+  crossOrigin="anonymous"
+/>
       </body>
     </html>
   );
