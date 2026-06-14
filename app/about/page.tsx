@@ -112,7 +112,7 @@ export default function AboutPage() {
             </p>
 
             <p>
-              Website: https://bytecraftstudio.com
+              <a href="https://www.bytecraftstudio.com/">Our Official Website</a>
             </p>
           </div>
         </section>
