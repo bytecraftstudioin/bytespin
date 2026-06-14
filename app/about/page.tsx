@@ -1,24 +1,25 @@
+import PageContainer from "@/components/layout/PageContainer";
+
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-[#030b2a] text-white">
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <h1 className="text-4xl font-bold mb-6">About ByteSpin</h1>
+    <PageContainer title="About ByteSpin">
+      <div className="space-y-6 text-gray-300 leading-8 text-lg">
 
-        <p className="mb-4">
-          ByteSpin is a free online spin wheel and random picker tool created by
-          Bytecraft Studio.
+        <p>
+          ByteSpin is a free online spin wheel and random picker tool created by Bytecraft Studio.
         </p>
 
-        <p className="mb-4">
-          Our platform helps users make random decisions, choose winners, pick
-          food options, select teams, assign tasks, and create custom spin wheels
-          instantly.
+        <p>
+          Our platform helps users make random decisions, choose winners,
+          pick food options, select teams, assign tasks, and create custom
+          spin wheels instantly.
         </p>
 
         <p>
           ByteSpin is designed to be fast, simple, and completely free to use.
         </p>
+
       </div>
-    </main>
+    </PageContainer>
   );
 }
