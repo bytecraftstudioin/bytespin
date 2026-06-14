@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -16,9 +16,8 @@ export const metadata = {
   title: "ByteSpin - Free Online Spin Wheel & Random Picker",
 
   description:
-  "ByteSpin is a free online spin wheel and random picker. Create custom wheels, spin instantly, choose winners, pick food, teams, tasks, and make random decisions.",
+    "ByteSpin is a free online spin wheel and random picker. Create custom wheels, spin instantly, choose winners, pick food, teams, tasks, and make random decisions.",
 
- 
   keywords: [
     "spin wheel",
     "random picker",
@@ -26,12 +25,12 @@ export const metadata = {
     "wheel spinner",
     "food wheel",
     "name picker",
-    "bytespin"
+    "bytespin",
   ],
 
   icons: {
     icon: "/logo.png",
-  }
+  },
 };
 
 export default function RootLayout({
@@ -44,7 +43,24 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-VEG9ZSP6NK"
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-VEG9ZSP6NK');
+          `}
+        </Script>
+      </body>
     </html>
   );
 }
