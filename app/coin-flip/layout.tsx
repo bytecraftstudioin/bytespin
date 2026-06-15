@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Coin Flip Online | ByteSpin",
+  title: "Coin Flip Online ",
   description:
-    "Free online coin flip tool. Instantly flip a virtual coin and get Heads or Tails.",
+    "Flip a virtual coin online and get random Heads or Tails results instantly. Free online coin flip tool.",
 };
 
-export default function CoinFlipLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
