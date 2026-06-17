@@ -28,7 +28,7 @@ export default function AboutPage() {
         <div className="space-y-4">
           <h2 className="text-2xl font-bold text-violet-400">Who We Are</h2>
           <p className="text-gray-300 leading-relaxed">
-            ByteSpin is a robust ecosystem of micro-utilities designed to take the friction out of decision-making. 
+            ByteSpin is a collection of free online tools that help users make random choices quickly and easily. 
             Whether you need to pick a winner for a giveaway, split a team order, or resolve a friendly dispute, 
             our tools provide objective, instantaneous results right within your web browser engine.
           </p>

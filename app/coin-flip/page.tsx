@@ -395,7 +395,7 @@ export default function CoinFlipPage() {
         <div>
           <h2 className="text-3xl font-extrabold mb-4 text-violet-400">How Coin Flip Works</h2>
           <p className="text-gray-300 leading-relaxed">
-            This online coin flip tool uses standard JavaScript randomization mechanisms to generate Heads or Tails results instantly. When you click to flip, our lightweight client script computes a pseudo-random value split evenly down the middle. This ensures an unbiased 50/50 breakdown without any server-side manipulation or tracking history logs influencing your active session.
+            This coin flip tool generates a random Heads or Tails result every time you flip. Each flip is independent, meaning previous results do not affect future outcomes.
           </p>
         </div>
 
