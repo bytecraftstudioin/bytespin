@@ -145,45 +145,45 @@ export default function CoinFlipPage() {
     "@type": "FAQPage",
     mainEntity: [
       {
-        "@type": "Question",
-        name: "Is Coin Flip truly random?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "This online coin flip tool uses native JavaScript randomization framework via Math.random() mechanics to generate unbiased Heads or Tails results instantly.",
-        },
-      },
+  "@type": "Question",
+  name: "Is Coin Flip truly random?",
+  acceptedAnswer: {
+    "@type": "Answer",
+    text: "This coin flip tool generates a random Heads or Tails result each time you flip. Every flip is independent and unbiased."
+  },
+},
       {
-        "@type": "Question",
-        name: "Can Heads appear 10 times in a row?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "While statistically highly uncommon, it is mathematically possible! Since each spin is treated as an entirely independent mathematical event, a historical streak does not change the equal 50% odds of the next individual toss.",
-        },
-      },
+  "@type": "Question",
+  name: "Can Heads appear 10 times in a row?",
+  acceptedAnswer: {
+    "@type": "Answer",
+    text: "Yes. Although it is uncommon, getting Heads 10 times in a row is mathematically possible because every flip is independent."
+  },
+},
+     {
+  "@type": "Question",
+  name: "What are the odds of Heads?",
+  acceptedAnswer: {
+    "@type": "Answer",
+    text: "The probability of getting Heads on a fair coin flip is 50%."
+  },
+},
       {
-        "@type": "Question",
-        name: "What are the odds of Heads?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "The exact structural probability is exactly 50%, or a clean 1-in-2 ratio layout. Over thousands of live automated iterations, the aggregate global metrics naturally balance out evenly.",
-        },
-      },
+  "@type": "Question",
+  name: "Can I use Coin Flip for decisions?",
+  acceptedAnswer: {
+    "@type": "Answer",
+    text: "Yes. A coin flip is commonly used to make fair decisions when choosing between two options."
+  },
+},
       {
-        "@type": "Question",
-        name: "Can I use Coin Flip for decisions?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Absolutely. It is an excellent, fully objective method to break structural stalemates, choose between two comparable development alternatives, or fairly assign match order logs.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Is this tool free?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, our online utility application setup is 100% free with completely unlimited real-time spins. You can track data statistics, review your local array history arrays, and run matches without tracking fees.",
-        },
-      },
+  "@type": "Question",
+  name: "Can I use Coin Flip for decisions?",
+  acceptedAnswer: {
+    "@type": "Answer",
+    text: "Yes. A coin flip is commonly used to make fair decisions when choosing between two options."
+  },
+},
     ],
   };
 
@@ -233,8 +233,8 @@ export default function CoinFlipPage() {
         </div>
 
         <p className="text-gray-400 text-lg max-w-2xl mb-12">
-          Flip a virtual coin and get a random Heads or Tails result instantly.
-        </p>
+          Flip a virtual coin online and get a random Heads or Tails result instantly. Free online coin toss generator for decisions, games and probability experiments.
+          </p>
 
         <div style={{ perspective: "1200px" }} className="mb-10">
           <div

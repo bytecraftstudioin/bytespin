@@ -63,35 +63,51 @@ export default function RandomNumberGenerator() {
   };
 
   const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "How does this Random Number Generator work?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Our utility utilizes native client-side JavaScript Math.random() expressions to process random integer selections dynamically between your designated Min and Max boundaries.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Is there any charge or restriction to use this picker?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "No. This tool is completely free with zero subscription requirements, capped limits, or signup requirements.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Can I generate negative numbers?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, you can input negative integers into both the minimum and maximum calculation boxes as long as the minimum value remains lower than the maximum.",
-        },
-      },
-    ],
-  };
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Is the Random Number Generator truly random?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "The Random Number Generator creates a random number within your selected range. Each generation is independent."
+      }
+    },
+    {
+      "@type": "Question",
+      name: "Can I generate numbers between custom ranges?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. You can enter any minimum and maximum values and generate a random number within that range."
+      }
+    },
+    {
+      "@type": "Question",
+      name: "Can I use this for giveaways and contests?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. Random Number Generators are commonly used for giveaways, contests and winner selection."
+      }
+    },
+    {
+      "@type": "Question",
+      name: "Is there a limit on how many numbers I can generate?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No. You can generate unlimited random numbers for free."
+      }
+    },
+    {
+      "@type": "Question",
+      name: "Is this tool free?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. This Random Number Generator is completely free to use."
+      }
+    }
+  ]
+};
 
   return (
     <main className="min-h-screen bg-[#0b1020] text-white">
@@ -237,6 +253,29 @@ export default function RandomNumberGenerator() {
           </p>
         </div>
       </section>
+
+<section>
+  <h2>
+    How Does a Random Number Generator Work?
+  </h2>
+
+  <p>
+    The generator uses mathematical algorithms to
+    produce random values between your selected
+    minimum and maximum numbers.
+  </p>
+</section>
+
+<section>
+  <h2>
+    Random Number Generator for Games
+  </h2>
+
+  <p>
+    Generate random values for board games,
+    challenges and competitions.
+  </p>
+</section>
 
       {/* --- FAQ ACCORDION --- */}
       <section className="max-w-4xl mx-auto px-6 py-12 border-t border-white/10 text-left">
