@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const rngMetadata: Metadata = {
-  title: "Random Number Generator - Quick & Free Online Picker",
+  title: "Random Number Generator - Free Online Number Picker",
   description:
     "Generate random numbers instantly with our free online tool. Set custom min/max ranges, view generation history, check real-time statistics, and copy results.",
   keywords: [
@@ -21,5 +21,13 @@ export const rngMetadata: Metadata = {
     url: "https://bytespin.bytecraftstudio.com/random-number-generator",
     siteName: "ByteSpin",
     type: "website",
+    images: [
+  {
+    url: "https://bytespin.bytecraftstudio.com/og-image.png",
+    width: 1200,
+    height: 630,
+    alt: "ByteSpin Random Number Generator",
+  },
+],
   },
 };

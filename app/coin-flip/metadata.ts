@@ -16,10 +16,18 @@ export const coinFlipMetadata: Metadata = {
     canonical: "https://bytespin.bytecraftstudio.com/coin-flip",
   },
   openGraph: {
-    title: "Coin Flip Online",
-    description: "Free online Heads or Tails generator.",
-    url: "https://bytespin.bytecraftstudio.com/coin-flip",
-    siteName: "ByteSpin",
-    type: "website",
-  },
+  title: "Coin Flip Online",
+  description: "Free online Heads or Tails generator.",
+  url: "https://bytespin.bytecraftstudio.com/coin-flip",
+  siteName: "ByteSpin",
+  type: "website",
+  images: [
+    {
+      url: "https://bytespin.bytecraftstudio.com/og-image.png",
+      width: 1200,
+      height: 630,
+      alt: "ByteSpin Coin Flip Tool",
+    },
+  ],
+},
 };
