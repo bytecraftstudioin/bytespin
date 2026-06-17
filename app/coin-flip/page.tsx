@@ -32,7 +32,7 @@ export default function CoinFlipPage() {
 
     const isHeads = Math.random() < 0.5;
     const face = isHeads ? "Heads" : "Tails";
-    setResult("");
+    result !== "" && setResult("");
 
     setTimeout(() => {
       setResult(face);
@@ -131,7 +131,6 @@ export default function CoinFlipPage() {
     setOpenFaq(openFaq === index ? null : index);
   };
 
-  // Structured Data Definitions
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -190,7 +189,6 @@ export default function CoinFlipPage() {
 
   return (
     <main className="min-h-screen bg-[#0b1020] text-white">
-      {/* 🚀 GOOGLE SEO INJECTIONS */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
@@ -385,7 +383,7 @@ export default function CoinFlipPage() {
         </div>
       </section>
 
-      {/* --- FIX 1: RE-WRITTEN EEAT HONEST CONTENT --- */}
+      {/* --- EEAT CONTENT --- */}
       <section className="max-w-4xl mx-auto px-6 py-16 border-t border-white/10 space-y-12 text-left">
         <div>
           <h2 className="text-3xl font-extrabold mb-4 text-violet-400">What is Coin Flip?</h2>
@@ -430,7 +428,7 @@ export default function CoinFlipPage() {
         </div>
       </section>
 
-      {/* --- FAQ ACCORDION SECTION WITH ACCURATE ANSWERS --- */}
+      {/* --- FAQ ACCORDION SECTION --- */}
       <section className="max-w-4xl mx-auto px-6 py-12 border-t border-white/10 text-left">
         <h2 className="text-3xl font-extrabold mb-8 text-center text-violet-400">Frequently Asked Questions</h2>
         <div className="space-y-4">
@@ -453,26 +451,35 @@ export default function CoinFlipPage() {
         </div>
       </section>
 
-      {/* --- CROSS INTERNAL LINKS FOOTER WITH CRITICAL SEO BOOSTS --- */}
-      <footer className="max-w-4xl mx-auto px-6 pt-8 pb-20 text-center border-t border-white/10">
-        <p className="text-gray-400 text-sm mb-4">Want to try other decision makers?</p>
-        <div className="flex flex-wrap justify-center items-center gap-4 text-sm font-bold text-violet-400">
-          <a href="/" className="hover:text-violet-300 transition-colors">
-            Try ByteSpin Wheel →
-          </a>
+      {/* --- RE-ARCHITECTED FOOTER WITH DYNAMIC TOOLS AND TRUST PAGES --- */}
+      <footer className="max-w-4xl mx-auto px-6 pt-10 pb-20 text-center border-t border-white/10 space-y-6">
+        <p className="text-gray-400 text-sm">Want to try other decision makers?</p>
+        
+        {/* Primary Utility Links */}
+        <div className="flex flex-wrap justify-center items-center gap-5 text-sm font-bold text-violet-400">
+          <a href="/" className="hover:text-violet-300 transition-colors">🎡 Try ByteSpin Wheel</a>
           <span className="text-white/10">|</span>
-          <a href="/random-number-generator" className="hover:text-violet-300 transition-colors">
-            Random Number Generator
-          </a>
+          <a href="/random-number-generator" className="hover:text-violet-300 transition-colors">🔢 Random Number Generator</a>
           <span className="text-white/10">|</span>
-          <a href="/yes-or-no" className="hover:text-violet-300 transition-colors">
-            Yes or No Picker
-          </a>
+          <a href="/yes-or-no" className="hover:text-violet-300 transition-colors">🙋 Yes or No Picker</a>
           <span className="text-white/10">|</span>
-          <a href="/dice-roller" className="hover:text-violet-300 transition-colors">
-            Dice Roller
-          </a>
+          <a href="/dice-roller" className="hover:text-violet-300 transition-colors">🎲 Dice Roller</a>
         </div>
+
+        {/* Mandatory AdSense Trust Verification Links */}
+        <div className="pt-4 border-t border-white/5 flex flex-wrap justify-center gap-4 text-xs font-semibold text-gray-400">
+          <a href="/about" className="hover:text-white transition-colors">About</a>
+          <span className="text-white/10">•</span>
+          <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+          <span className="text-white/10">•</span>
+          <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+          <span className="text-white/10">•</span>
+          <a href="/contact" className="hover:text-white transition-colors">Contact Us</a>
+        </div>
+
+        <p className="text-[11px] text-gray-600 font-medium">
+          © 2026 ByteSpin by Bytecraft Studio. All rights reserved.
+        </p>
       </footer>
     </main>
   );
