@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 
+
 export default function YesOrNoPage() {
   const [result, setResult] = useState<"YES" | "NO" | null>(null);
   const [thinking, setThinking] = useState(false);
