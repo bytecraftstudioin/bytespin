@@ -10,7 +10,10 @@ export const coinFlipMetadata: Metadata = {
     "heads or tails",
     "online coin toss",
     "random coin flip",
-    "virtual coin"
+    "virtual coin",
+    "bytespin coin flip",
+    "bytecraft studio coin flip",
+    "bytecraft studio",
   ],
   alternates: {
     canonical: "https://bytespin.bytecraftstudio.com/coin-flip",

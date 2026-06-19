@@ -9,7 +9,10 @@ export const yesNoMetadata: Metadata = {
     "yes no picker",
     "decision maker",
     "random yes or no",
-    "online yes no generator"
+    "online yes no generator",
+    "bytespin yes no generator",
+    "bytecraft studio yes no generator",
+    "bytecraft studio",
   ],
   alternates: {
     canonical:

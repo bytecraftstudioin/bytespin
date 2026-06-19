@@ -10,7 +10,10 @@ export const rngMetadata: Metadata = {
     "random digit generator",
     "rng online",
     "pick random number",
-    "random integer selector"
+    "random integer selector",
+    "bytespin random number generator",
+    "bytecraft studio random number generator",
+    "bytecraft studio",
   ],
   alternates: {
     canonical: "https://bytespin.bytecraftstudio.com/random-number-generator",

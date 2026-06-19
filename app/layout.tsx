@@ -25,7 +25,11 @@ export const metadata = {
     "wheel spinner",
     "food wheel",
     "name picker",
-    "bytespin"
+    "bytespin",
+    "bytecraft studio bytespin",
+    "bytecraft studio",
+    "spin the wheel"
+    
   ],
 
   icons: {
