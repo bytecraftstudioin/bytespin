@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Spin Wheel</title>
+
+<style>
+body{
+  margin:0;
+  font-family: 'Poppins', sans-serif;
+  background:#f2f2f2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+h1{
+  margin-top:20px;
+}
+
+.container{
+  max-width:900px;
+  width:100%;
+  padding:20px;
+  text-align:center;
+}
+
+#wheel-container{
+  position:relative;
+  width:300px;
+  height:300px;
+  margin:20px auto;
+}
+
+#wheel{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  transition:transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+#spin-btn{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  padding:10px 20px;
+  border:none;
+  background:#e07a7a;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  border-radius:5px;
+}
+
+.pointer{
+  position:absolute;
+  top: -10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:15px solid transparent;
+  border-right:15px solid transparent;
+  border-top:25px solid #000;
+}
+
+.result-box{
+  margin-top:20px;
+  max-height:120px;
+  overflow:hidden;
+  transition:0.3s;
+}
+
+.result-box.expanded{
+  max-height:300px;
+}
+
+.result-box div{
+  padding:5px;
+  background:#ddd;
+  margin:4px 0;
+}
+
+button{
+  margin:5px;
+  padding:8px 15px;
+  border:none;
+  cursor:pointer;
+  background:#bbb;
+}
+
+input{
+  padding:6px;
+  margin:5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Spin Wheel</h1>
+
+<div id="wheel-container"><br>
+  <div class="pointer"></div>
+  <canvas id="wheel" width="300" height="300"></canvas>
+  <button id="spin-btn">Spin</button>
+</div>
+
+<h2>Result</h2>
+<div class="result-box" id="resultBox"></div>
+<button onclick="toggleResults()">See More</button>
+
+<h2>Input Mode</h2>
+<button onclick="setMode('yesno')">Yes / No</button>
+<button onclick="setMode('custom')">Custom</button>
+
+<div id="custom-inputs" style="display:none;">
+  <select id="inputCount" onchange="generateInputs()">
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="5">6</option>
+    <option value="5">7</option>
+  </select>
+  <div id="inputs"></div>
+  <button onclick="applyCustom()">Enter</button>
+</div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+let options = ["Yes","No","Yes","No"];
+let startAngle = 5;
+let arc;
+let spinning = false;
+let rotation = 5;
+let results = [];
+
+const spinSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3");
+const winSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3");
+
+function drawWheel(){
+  arc = 2 * Math.PI / options.length;
+  for(let i=0;i<options.length;i++){
+    let angle = startAngle + i * arc;
+    ctx.beginPath();
+    ctx.fillStyle = `hsl(${i * 360/options.length},70%,60%)`;
+    ctx.moveTo(150,150);
+    ctx.arc(150,150,150,angle,angle+arc);
+    ctx.fill();
+    ctx.save();
+    ctx.fillStyle="#000";
+    ctx.translate(150,150);
+    ctx.rotate(angle + arc/2);
+    ctx.fillText(options[i], 80, 5);
+    ctx.restore();
+  }
+}
+
+function spin(){
+  if(spinning) return;
+  spinning=true;
+  spinSound.play();
+  let spinDegree = Math.floor(5000 + Math.random()*5000);
+  rotation += spinDegree;
+  canvas.style.transform = `rotate(${rotation}deg)`;
+
+  setTimeout(()=>{
+    spinning=false;
+    let degree = rotation % 360;
+    let index = Math.floor((360 - degree) / (360/options.length)) % options.length;
+    showResult(options[index]);
+    winSound.play();
+  },4000);
+}
+
+function showResult(res){
+  results.unshift(res);
+  const box = document.getElementById("resultBox");
+  box.innerHTML="";
+  results.forEach((r,i)=>{
+    if(i<3){
+      box.innerHTML += `<div>${i+1}. ${r}</div>`;
+    }
+  });
+}
+
+function toggleResults(){
+  document.getElementById("resultBox").classList.toggle("expanded");
+}
+
+function setMode(mode){
+  if(mode==="yesno"){
+    options=["Yes","No","Yes","No"];
+    document.getElementById("custom-inputs").style.display="none";
+  }else{
+    document.getElementById("custom-inputs").style.display="block";
+  }
+  drawWheel();
+}
+
+function generateInputs(){
+  let count=document.getElementById("inputCount").value;
+  let container=document.getElementById("inputs");
+  container.innerHTML="";
+  for(let i=0;i<count;i++){
+    container.innerHTML+=`<input type="text" placeholder="Value ${i+1}"><br>`;
+  }
+}
+
+function applyCustom(){
+  let inputs=document.querySelectorAll("#inputs input");
+  options=[];
+  inputs.forEach(inp=>{
+    if(inp.value.trim()!==""){
+      options.push(inp.value);
+    }
+  });
+  drawWheel();
+}
+
+document.getElementById("spin-btn").addEventListener("click",spin);
+
+drawWheel();
+generateInputs();
+</script>
+
+</body>
+</html>
