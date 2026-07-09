@@ -1,163 +1,26 @@
 "use client";
-
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
-
-interface CitySuggestion {
-  name: string;
-  country: string;
-  admin1?: string;
-  latitude: number;
-  longitude: number;
-}
-
-interface WeatherData {
-  city: string;
-  temp: number;
-  feelsLike: number;
-  humidity: number;
-  windSpeed: number;
-  isDay: boolean;
-  weatherCode: number;
-  sunrise: string;
-  sunset: string;
-  uvIndex: number;
-  aqi: number;
-  pm25: number;
-  pm10: number;
-  hourly: { time: string; temp: number; code: number }[];
-  daily: { date: string; maxTemp: number; minTemp: number; code: number }[];
-}
-
-const getWeatherDetails = (code: number): { text: string; icon: React.JSX.Element } => {
-  const sunIcon = <svg className="w-8 h-8 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z" /></svg>;
-  const cloudSunIcon = <svg className="w-8 h-8 text-amber-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z" /></svg>;
-  const cloudIcon = <svg className="w-8 h-8 text-blue-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>;
-  const fogIcon = <svg className="w-8 h-8 text-gray-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>;
-  const rainIcon = <svg className="w-8 h-8 text-cyan-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v4m0 4h.01M4.93 4.93l1.41 1.41m10.606 0l1.41-1.41M12 3v1m0 16v1m9-9h-1M4 12H3" /></svg>;
-  const snowIcon = <svg className="w-8 h-8 text-sky-200 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v16M5 12h14m-3.5-3.5l-7 7m0-7l7 7" /></svg>;
-  const stormIcon = <svg className="w-8 h-8 text-violet-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
-
-  const mapping: Record<number, { text: string; icon: React.JSX.Element }> = {
-    0: { text: "Clear Sky", icon: sunIcon }, 1: { text: "Mainly Clear", icon: cloudSunIcon },
-    2: { text: "Partly Cloudy", icon: cloudSunIcon }, 3: { text: "Overcast", icon: cloudIcon },
-    45: { text: "Foggy", icon: fogIcon }, 48: { text: "Depositing Rime Fog", icon: fogIcon },
-    51: { text: "Light Drizzle", icon: rainIcon }, 53: { text: "Moderate Drizzle", icon: rainIcon },
-    55: { text: "Dense Drizzle", icon: rainIcon }, 56: { text: "Light Freezing Drizzle", icon: rainIcon },
-    57: { text: "Dense Freezing Drizzle", icon: rainIcon }, 61: { text: "Slight Rain", icon: rainIcon },
-    63: { text: "Moderate Rain", icon: rainIcon }, 65: { text: "Heavy Rain", icon: rainIcon },
-    66: { text: "Light Freezing Rain", icon: rainIcon }, 67: { text: "Heavy Freezing Rain", icon: rainIcon },
-    71: { text: "Slight Snow Fall", icon: snowIcon }, 73: { text: "Moderate Snow Fall", icon: snowIcon },
-    75: { text: "Heavy Snow Fall", icon: snowIcon }, 77: { text: "Snow Grains", icon: snowIcon },
-    80: { text: "Slight Rain Showers", icon: rainIcon }, 81: { text: "Moderate Rain Showers", icon: rainIcon },
-    82: { text: "Violent Rain Showers", icon: rainIcon }, 85: { text: "Slight Snow Showers", icon: snowIcon },
-    86: { text: "Heavy Snow Showers", icon: snowIcon }, 95: { text: "Thunderstorm", icon: stormIcon },
-    96: { text: "Thunderstorm with Slight Hail", icon: stormIcon }, 99: { text: "Thunderstorm with Heavy Hail", icon: stormIcon },
-  };
-  return mapping[code] || { text: "Scattered Clouds", icon: cloudIcon };
-};
-
-const getAQIStatus = (aqi: number) => {
-  if (aqi <= 20) return { text: "Excellent", color: "text-emerald-400" };
-  if (aqi <= 40) return { text: "Good", color: "text-green-400" };
-  if (aqi <= 60) return { text: "Fair", color: "text-amber-400" };
-  if (aqi <= 80) return { text: "Poor", color: "text-orange-400" };
-  if (aqi <= 100) return { text: "Very Poor", color: "text-red-400" };
-  return { text: "Hazardous", color: "text-purple-400" };
-};
-
-const getUVStyle = (uv: number) => {
-  if (uv <= 2) return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
-  if (uv <= 5) return "bg-amber-500/20 text-amber-400 border-amber-500/30";
-  if (uv <= 7) return "bg-orange-500/20 text-orange-400 border-orange-500/30";
-  if (uv <= 10) return "bg-red-500/20 text-red-400 border-red-500/30";
-  return "bg-purple-500/20 text-purple-400 border-purple-500/30";
-};
+import SearchBox from "@/components/weather/SearchBox";
+import CurrentWeather from "@/components/weather/CurrentWeather";
+import HourlyForecast from "@/components/weather/HourlyForecast";
+import WeeklyForecast from "@/components/weather/WeeklyForecast";
+import AQICard from "@/components/weather/AQICard";
+import FAQ from "@/components/weather/FAQ";
+import SeoContent from "@/components/weather/SeoContent";
+import { WeatherData } from "@/lib/weather";
 
 export default function WeatherPage() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
   const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [copied, setCopied] = useState<boolean>(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [emptySearchFeedback, setEmptySearchFeedback] = useState<boolean>(false);
-  
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("bytespin_recent_weather");
-    if (saved) setRecentSearches(JSON.parse(saved));
-    triggerAutoDetection();
-  }, []);
-
-  const triggerAutoDetection = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => fetchWeatherData(pos.coords.latitude, pos.coords.longitude, "Current Location"),
-        () => fetchWeatherData(13.0827, 80.2707, "Chennai, India")
-      );
-    } else {
-      fetchWeatherData(13.0827, 80.2707, "Chennai, India");
-    }
-  };
-
-  useEffect(() => {
-    if (searchQuery.trim().length < 3) {
-      setSuggestions([]);
-      setEmptySearchFeedback(false);
-      return;
-    }
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-
-    debounceRef.current = setTimeout(async () => {
-      try {
-        setEmptySearchFeedback(false);
-        const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchQuery)}&count=5&language=en&format=json`);
-        const data = await res.json();
-        if (data && data.results && data.results.length > 0) {
-          setSuggestions(data.results.map((item: any) => ({
-            name: item.name, country: item.country || "", admin1: item.admin1 || "", latitude: item.latitude, longitude: item.longitude,
-          })));
-        } else {
-          setSuggestions([]);
-          setEmptySearchFeedback(true);
-        }
-      } catch (err) { console.error(err); }
-    }, 400);
-
-    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, [searchQuery]);
+  const [loading, setLoading] = useState(false);
 
   const fetchWeatherData = async (lat: number, lon: number, cityName: string) => {
     try {
       setLoading(true);
-      setErrorMessage(null);
-      setSuggestions([]);
-
-      // 1. Calling local proxy route to completely bypass browser CORS 
       const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
-      if (!response.ok) throw new Error("Server gateway pipeline error");
-
       const { weatherData, aqiData } = await response.json();
 
-      if (weatherData && weatherData.current) {
-        const currentHourIdx = new Date().getHours();
-        const computedHourly = weatherData.hourly.time.slice(currentHourIdx, currentHourIdx + 8).map((t: string, index: number) => ({
-          time: new Date(t).toLocaleTimeString("en-US", { hour: "numeric", hour12: true }),
-          temp: Math.round(weatherData.hourly.temperature_2m[currentHourIdx + index]),
-          code: weatherData.hourly.weather_code[currentHourIdx + index]
-        }));
-
-        const computedDaily = weatherData.daily.time.map((d: string, index: number) => ({
-          date: new Date(d).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }),
-          maxTemp: Math.round(weatherData.daily.temperature_2m_max[index]),
-          minTemp: Math.round(weatherData.daily.temperature_2m_min[index]),
-          code: weatherData.daily.weather_code[index]
-        }));
-
+      if (weatherData?.current) {
         setWeather({
           city: cityName,
           temp: Math.round(weatherData.current.temperature_2m),
@@ -166,400 +29,66 @@ export default function WeatherPage() {
           windSpeed: Math.round(weatherData.current.wind_speed_10m),
           isDay: weatherData.current.is_day === 1,
           weatherCode: weatherData.current.weather_code,
-          sunrise: new Date(weatherData.daily.sunrise[0]).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-          sunset: new Date(weatherData.daily.sunset[0]).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+          sunrise: new Date(weatherData.daily.sunrise[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          sunset: new Date(weatherData.daily.sunset[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           uvIndex: Math.round(weatherData.daily.uv_index_max[0]),
           aqi: aqiData?.current?.european_aqi || 0,
           pm25: Math.round(aqiData?.current?.pm2_5 || 0),
           pm10: Math.round(aqiData?.current?.pm10 || 0),
-          hourly: computedHourly,
-          daily: computedDaily,
+          hourly: weatherData.hourly.time.slice(0, 8).map((t: string, i: number) => ({
+            time: new Date(t).toLocaleTimeString([], { hour: 'numeric' }),
+            temp: Math.round(weatherData.hourly.temperature_2m[i]),
+            code: weatherData.hourly.weather_code[i]
+          })),
+          daily: weatherData.daily.time.map((d: string, i: number) => ({
+            date: new Date(d).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }),
+            maxTemp: Math.round(weatherData.daily.temperature_2m_max[i]),
+            minTemp: Math.round(weatherData.daily.temperature_2m_min[i]),
+            code: weatherData.daily.weather_code[i]
+          }))
         });
-
-        if (cityName !== "Current Location") updateRecentSearches(cityName);
       }
-    } catch (err) {
-      setErrorMessage("Network pipeline latency detected. Use the static manual configuration nodes below.");
-    } finally {
-      setLoading(false);
-    }
+    } catch (e) { console.error("Pipeline breakdown", e); }
+    finally { setLoading(false); }
   };
 
-  const updateRecentSearches = (city: string) => {
-    let searches = [city, ...recentSearches.filter((c) => c !== city)].slice(0, 4);
-    setRecentSearches(searches);
-    localStorage.setItem("bytespin_recent_weather", JSON.stringify(searches));
+  const triggerAutoDetection = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => fetchWeatherData(pos.coords.latitude, pos.coords.longitude, "Current Location"),
+        () => fetchWeatherData(13.0827, 80.2707, "Chennai, India")
+      );
+    } else { fetchWeatherData(13.0827, 80.2707, "Chennai, India"); }
   };
 
-  const handleCopy = () => {
-    if (!weather) return;
-    const text = `${weather.city}\nTemperature: ${weather.temp}°C\nFeels Like: ${weather.feelsLike}°C\nHumidity: ${weather.humidity}%\nWind: ${weather.windSpeed} km/h`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleShare = async () => {
-    if (!weather) return;
-    const shareText = `${weather.city}: ${weather.temp}°C - ${getWeatherDetails(weather.weatherCode).text}. Live tracking on ByteSpin.`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: `Weather - ${weather.city}`, text: shareText, url: window.location.href });
-      } catch (err) { console.error(err); }
-    } else { handleCopy(); }
-  };
-
-  // Structured JSON-LD Rich Snippet Loop generation to eliminate Soft 404 indexing errors
-  const jsonLdSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "ByteSpin Meteorological Tracking Dashboard",
-    "url": "https://bytespin.bytecraftstudio.com/weather",
-    "applicationCategory": "UtilityApplication",
-    "operatingSystem": "All",
-    "description": "Comprehensive global weather parameters tracking system parsing real-time temperature, wind vectors, and AQI analytics indexes.",
-    "browserRequirements": "Requires JavaScript. Requires HTML5."
-  };
+  useEffect(() => { triggerAutoDetection(); }, []);
 
   return (
-    <main className="min-h-screen bg-[#0b1020] text-white overflow-x-hidden antialiased">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }} />
+    <main className="min-h-screen bg-[#0b1020] text-white antialiased">
       <Navbar />
+      <section className="flex flex-col items-center text-center px-4 pt-12 max-w-7xl mx-auto w-full">
+        <h1 className="text-4xl sm:text-6xl font-black mb-4 tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">Weather Dashboard</h1>
+        <SearchBox onSelectCity={fetchWeatherData} onDetectLocation={triggerAutoDetection} />
 
-      <section className="flex flex-col items-center text-center px-4 pt-12 pb-12 w-full max-w-7xl mx-auto">
-        <h1 className="text-4xl sm:text-6xl font-black mb-4 tracking-tight bg-gradient-to-r from-white via-slate-200 to-gray-400 bg-clip-text text-transparent">
-          Weather Forecast
-        </h1>
-        <p className="text-gray-400 text-xs sm:text-base max-w-2xl mb-8 px-2 leading-relaxed">
-          Real-time global weather parameters. Check current temperature, atmospheric metrics, air quality charts, and multi-day forecasts seamlessly.
-        </p>
-
-        {/* Input Interface Elements Row */}
-        <div className="w-full max-w-xl flex flex-col sm:flex-row items-center gap-3 mb-6 px-2 z-30">
-          <div className="relative w-full">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value.replace(/\s\s+/g, " "))}
-              placeholder="Search any city worldwide..."
-              className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pr-12 text-sm font-bold text-gray-100 placeholder-gray-500 focus:outline-none focus:border-violet-500 transition-colors shadow-inner"
-            />
-            {loading && <span className="absolute right-4 top-4 text-xs font-mono text-violet-400 animate-spin">⏳</span>}
-            
-            {suggestions.length > 0 && (
-              <div className="absolute left-0 right-0 mt-2 bg-slate-950 border border-white/10 rounded-xl overflow-hidden shadow-2xl text-left z-40">
-                {suggestions.map((city, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => fetchWeatherData(city.latitude, city.longitude, `${city.name}, ${city.country}`)}
-                    className="w-full text-left px-4 py-3 hover:bg-white/5 text-xs sm:text-sm font-semibold border-b border-white/5 last:border-0 transition-colors"
-                  >
-                    📍 {city.name}, <span className="text-gray-400 text-xs">{city.admin1} ({city.country})</span>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {emptySearchFeedback && (
-              <div className="absolute left-0 right-0 mt-2 bg-slate-950/95 border border-red-500/20 p-3 rounded-xl text-left text-xs font-bold text-red-400 shadow-xl z-40">
-                ❌ No city found. Try modifying the characters.
-              </div>
-            )}
-          </div>
-
-          <button
-            onClick={triggerAutoDetection}
-            className="w-full sm:w-auto shrink-0 bg-violet-600 hover:bg-violet-700 active:scale-95 transition-all text-xs font-bold py-4 px-5 rounded-2xl flex items-center justify-center gap-2 shadow-lg"
-          >
-            📍 Use My Location
-          </button>
-        </div>
-
-        {recentSearches.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-center max-w-xl mb-10 px-2">
-            {recentSearches.map((city, i) => (
-              <button
-                key={i}
-                onClick={async () => {
-                  try {
-                    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`);
-                    const data = await res.json();
-                    if (data?.results?.[0]) fetchWeatherData(data.results[0].latitude, data.results[0].longitude, city);
-                  } catch (e) { console.error(e); }
-                }}
-                className="bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-xs font-bold py-1.5 px-3 rounded-xl flex items-center gap-1.5"
-              >
-                📍 <span className="text-gray-300">{city}</span>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* 2. Static Framework Fallback Fallback Loop - Active on loading/error to neutralize Soft 404 block */}
-        {errorMessage && (
-          <div className="w-full max-w-xl bg-slate-900 border border-amber-500/20 p-5 rounded-2xl text-left mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <p className="text-xs font-bold text-amber-400">⚠️ System Loop Latency</p>
-              <p className="text-xs text-gray-400 mt-1">Global networks are busy. Use our fallback static overview modules below.</p>
-            </div>
-            <button 
-              onClick={triggerAutoDetection} 
-              className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold px-4 py-2 rounded-xl transition-all active:scale-95 shrink-0"
-            >
-              🔄 Retry Connection
-            </button>
-          </div>
-        )}
-
-        {/* Dynamic Hydrated Card Blocks Node Container */}
         {loading ? (
-          <div className="w-full max-w-4xl space-y-6 text-left px-2 animate-pulse">
-            <div className="h-64 bg-white/5 border border-white/10 rounded-3xl" />
-            <div className="h-32 bg-white/5 border border-white/10 rounded-3xl" />
+          <div className="w-full max-w-4xl h-64 bg-white/5 rounded-3xl animate-pulse" />
+        ) : weather ? (
+          <div className="w-full max-w-4xl space-y-6 text-left">
+            <CurrentWeather data={weather} />
+            <AQICard data={weather} />
+            <HourlyForecast data={weather} />
+            <WeeklyForecast data={weather} />
           </div>
         ) : (
-          weather ? (
-            <div className="w-full max-w-4xl space-y-6 text-left px-2 transition-all duration-500 transform opacity-100 translate-y-0">
-              <div className="bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-3xl p-5 sm:p-8 shadow-2xl relative">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-white/5 pb-6 gap-4">
-                  <div className="flex items-center gap-4">
-                    {getWeatherDetails(weather.weatherCode).icon}
-                    <div>
-                      <h2 className="text-2xl sm:text-3xl font-black tracking-tight">{weather.city}</h2>
-                      <p className="text-violet-400 font-bold text-sm">{getWeatherDetails(weather.weatherCode).text}</p>
-                    </div>
-                  </div>
-                  <div className="text-left sm:text-right">
-                    <span className="text-5xl sm:text-6xl font-black text-emerald-400 font-mono">{weather.temp}°C</span>
-                    <p className="text-xs text-gray-400 font-bold mt-1">Feels like {weather.feelsLike}°C</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pt-6">
-                  <div className="bg-slate-900/40 border border-white/5 rounded-2xl p-4">
-                    <p className="text-[10px] font-bold uppercase text-gray-400">Humidity</p>
-                    <p className="text-base sm:text-lg font-extrabold text-gray-200 mt-1">{weather.humidity}%</p>
-                  </div>
-                  <div className="bg-slate-900/40 border border-white/5 rounded-2xl p-4">
-                    <p className="text-[10px] font-bold uppercase text-gray-400">Wind Velocity</p>
-                    <p className="text-base sm:text-lg font-extrabold text-gray-200 mt-1">{weather.windSpeed} km/h</p>
-                  </div>
-                  <div className="bg-slate-900/40 border border-white/5 rounded-2xl p-4">
-                    <p className="text-[10px] font-bold uppercase text-gray-400">🌅 Sunrise</p>
-                    <p className="text-xs sm:text-sm font-extrabold text-amber-400 mt-1">{weather.sunrise}</p>
-                  </div>
-                  <div className="bg-slate-900/40 border border-white/5 rounded-2xl p-4">
-                    <p className="text-[10px] font-bold uppercase text-gray-400">🌇 Sunset</p>
-                    <p className="text-xs sm:text-sm font-extrabold text-orange-400 mt-1">{weather.sunset}</p>
-                  </div>
-                </div>
-
-                <div className="mt-4 p-4 bg-slate-950/40 border border-white/5 rounded-2xl grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div>
-                    <span className="text-[10px] text-gray-400 uppercase font-bold block">Air Quality Index</span>
-                    <span className={`text-xs sm:text-sm font-bold font-mono ${getAQIStatus(weather.aqi).color}`}>
-                      {weather.aqi} ({getAQIStatus(weather.aqi).text})
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-gray-400 uppercase font-bold block">PM2.5 Matrix</span>
-                    <span className="text-xs sm:text-sm font-bold text-gray-200 font-mono">{weather.pm25} µg/m³</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-gray-400 uppercase font-bold block">PM10 Matrix</span>
-                    <span className="text-xs sm:text-sm font-bold text-gray-200 font-mono">{weather.pm10} µg/m³</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-gray-400 uppercase font-bold block mb-1">UV Radiation</span>
-                    <span className={`text-[11px] font-bold py-0.5 px-2 rounded-md border ${getUVStyle(weather.uvIndex)}`}>
-                      Level {weather.uvIndex}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex justify-end gap-2">
-                  <button onClick={handleCopy} className="text-[11px] sm:text-xs bg-white/5 hover:bg-white/10 border border-white/10 py-2.5 px-4 rounded-xl font-bold transition-all">
-                    {copied ? "✅ Copied" : "📋 Copy"}
-                  </button>
-                  <button onClick={handleShare} className="text-[11px] sm:text-xs bg-violet-600/20 hover:bg-violet-600/30 text-violet-400 border border-violet-500/30 py-2.5 px-4 rounded-xl font-bold transition-all">
-                    🔗 Share
-                  </button>
-                </div>
-              </div>
-
-              {/* Hourly Grid Block */}
-              <div className="bg-slate-950/30 border border-white/10 rounded-3xl p-5 sm:p-6">
-                <h3 className="text-sm font-bold text-violet-400 mb-4 uppercase tracking-wider">Hourly Outlook</h3>
-                <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-white/10">
-                  {weather.hourly.map((h, i) => (
-                    <div key={i} className="min-w-[85px] bg-white/5 border border-white/5 rounded-2xl p-3 text-center flex flex-col items-center gap-2 shrink-0">
-                      <span className="text-[10px] text-gray-400 font-bold">{h.time}</span>
-                      {getWeatherDetails(h.code).icon}
-                      <span className="text-xs sm:text-sm font-black font-mono">{h.temp}°C</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 7-Day Forecast Grid Row */}
-              <div className="bg-slate-950/30 border border-white/10 rounded-3xl p-5 sm:p-6">
-                <h3 className="text-sm font-bold text-violet-400 mb-4 uppercase tracking-wider">7-Day Forecast Structural Matrix</h3>
-                <div className="space-y-2.5">
-                  {weather.daily.map((d, i) => (
-                    <div key={i} className="bg-white/5 border border-white/5 p-3 sm:p-4 rounded-2xl flex justify-between items-center gap-2">
-                      <span className="text-xs font-bold text-gray-300 w-24 sm:w-36 truncate">{d.date}</span>
-                      <div className="flex items-center gap-2 justify-center flex-1 sm:flex-initial sm:w-44 text-center">
-                        {getWeatherDetails(d.code).icon}
-                        <span className="text-[11px] text-gray-400 font-medium hidden sm:inline truncate max-w-[120px]">{getWeatherDetails(d.code).text}</span>
-                      </div>
-                      <div className="text-right font-mono text-xs sm:text-sm shrink-0">
-                        <span className="text-emerald-400 font-bold">{d.maxTemp}°C</span>
-                        <span className="text-gray-500 mx-1">/</span>
-                        <span className="text-sky-400">{d.minTemp}°C</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : (
-            /* Crucial Component: Always-Visible Static Content Base Node to completely annihilate Googlebot Soft 404 indexing anomalies */
-            <div className="w-full max-w-4xl bg-white/5 border border-white/10 rounded-3xl p-6 text-left space-y-4">
-              <h3 className="text-lg font-bold text-violet-400 border-b border-white/5 pb-2">📋 Real-Time Meteorological Station Overview</h3>
-              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                Welcome to ByteSpin Weather Station dashboard. This terminal layout targets core metrics mapped cross-border over any international geo-coordinate.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="bg-slate-950/40 p-4 rounded-xl border border-white/5">
-                  <h4 className="text-xs font-bold text-gray-200 uppercase tracking-wide">⚡ Core Live Elements Mapped</h4>
-                  <ul className="text-xs text-gray-400 space-y-1.5 mt-2 list-disc list-inside">
-                    <li>Dynamic Temperature Hydration Indexes (Celsius/Fahrenheit)</li>
-                    <li>Atmospheric Wind Vector Analysis and Directional Speeds</li>
-                    <li>Relative Boundary Layer Humidity Percentage Matrix</li>
-                    <li>Astronomical Nodes Mapping (Solar Sunrise and Sunset times)</li>
-                  </ul>
-                </div>
-                <div className="bg-slate-950/40 p-4 rounded-xl border border-white/5">
-                  <h4 className="text-xs font-bold text-gray-200 uppercase tracking-wide">🍃 Air Contaminant Mapping Metrics</h4>
-                  <ul className="text-xs text-gray-400 space-y-1.5 mt-2 list-disc list-inside">
-                    <li>European Standard Air Quality Indexes (AQI Tracking loops)</li>
-                    <li>Particulate Matter Concentrations (PM2.5 and PM10 Density grids)</li>
-                    <li>Ultraviolet Index Exposure Classifications and badge warnings</li>
-                  </ul>
-                </div>
-              </div>
-              <p className="text-[11px] text-gray-500 font-mono text-center pt-2">ByteSpin Index Matrix Engine • Status: 200 OK • Index Node Verified</p>
-            </div>
-          )
+          /* Static Hydration Fallback to bypass Soft 404 instantly before JS loads */
+          <div className="w-full max-w-4xl bg-white/5 border border-white/10 rounded-3xl p-6 text-left">
+            <h3 className="text-sm font-bold text-violet-400 uppercase tracking-wider mb-2">⚡ Live Terminal Fallback Mode</h3>
+            <p className="text-xs text-gray-400">Loading server-side meteorological indices dynamically. Standard static layouts remain completely structural to maintain engine indexing requirements.</p>
+          </div>
         )}
       </section>
-
-      {/* --- 3. 1000+ WORDS DETAILED SEMANTIC ARTICLE FOR SEARCH CONSOLE INDEXING VALUE --- */}
-      <section className="max-w-4xl mx-auto px-6 py-12 border-t border-white/10 text-left space-y-8 tracking-normal">
-        <article className="prose prose-invert max-w-none text-xs sm:text-sm text-gray-300 space-y-6 leading-relaxed">
-          
-          <header>
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">Understanding Global Meteorological Metrics and Weather Analytics</h2>
-            <p className="text-xs text-violet-400 font-semibold uppercase tracking-wider">An In-Depth Engineering Documentation by ByteSpin Tools Framework</p>
-          </header>
-
-          <section className="space-y-3">
-            <h3 className="text-lg font-bold text-white pt-2">1. The Mechanics Behind Numerical Weather Prediction (NWP)</h3>
-            <p>
-              Modern forecasting layout loops operate by gathering vast streams of observation inputs from satellite frameworks, atmospheric radar installations, and maritime marine buoys. These parameters are parsed through complex numerical fluid dynamic algorithms running inside hyper-scale processing servers. Models such as the Global Forecast System (GFS) and the European Centre for Medium-Range Weather Forecasts (ECMWF) resolve multi-layered differential vectors to track air mass movements across global coordinate matrices.
-            </p>
-            <p>
-              ByteSpin Weather Tools module interfaces directly with highly reliable decentralized server routes using specialized API wrappers. By mapping raw coordinate inputs derived from high-fidelity geocoding nodes, our software system eliminates runtime request latency while ensuring absolute processing security for enterprise and standard consumer web architectures alike.
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h3 className="text-lg font-bold text-white pt-2">2. Critical Atmospheric Indexes and Parameters Defined</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-              <div className="bg-slate-900/60 border border-white/5 p-4 rounded-xl">
-                <h4 className="text-xs font-extrabold uppercase text-violet-400">Ambient Temperature vs Apparent Sensation</h4>
-                <p className="text-xs text-gray-400 mt-1">
-                  Ambient heat indicates absolute kinetic kinetic activity of air molecules measured via shaded instrumentation configurations. Conversely, Apparent Temperature (Feels Like index) calculates heat index metrics by mixing ambient data profiles alongside relative humidity scales and boundary layer wind-chill parameters. High humidity slows sweat evaporation channels, forcing the biological system to experience significantly higher temperature loads than the static ambient readout implies.
-                </p>
-              </div>
-              <div className="bg-slate-900/60 border border-white/5 p-4 rounded-xl">
-                <h4 className="text-xs font-extrabold uppercase text-violet-400">Relative Humidity and Dew Point Thresholds</h4>
-                <p className="text-xs text-gray-400 mt-1">
-                  Humidity defines the water vapor ratio suspended in the current troposphere structure relative to the absolute saturation ceiling at that exact thermal index. High relative humidity values alter precipitation probabilities, cloud canopy configurations, and local thermal retention loops. Tracking these variations enables accurate charting of incoming convective microburst configurations.
-                </p>
-              </div>
-            </div>
-            <p>
-              Wind velocity grids, another fundamental component of global forecasting matrices, denote horizontal air mass displacement vectors driven by barometric pressure gradients. As localized high-pressure areas push outwards toward low-pressure thermodynamic valleys, Coriolis deflection loops spin these tracking layers into localized breezes or high-velocity cyclical storm fronts.
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h3 className="text-lg font-bold text-white pt-2">3. Air Quality Indexes (AQI) and Particulate Contaminant Science</h3>
-            <p>
-              The Air Quality Index (AQI) standard compresses volatile environmental tracking telemetry into a single unified performance value. Our platform maps the European AQI framework, checking five primary pollutants: ground-level ozone ($O_3$), nitrogen dioxide ($NO_2$), sulfur dioxide ($SO_2$), carbon monoxide ($CO$), and airborne particulate matter structures ($PM_{2.5}$ and $PM_{10}$).
-            </p>
-            <p>
-              Particulate matter categories like $PM_{2.5}$ represent dynamic micro-particles smaller than 2.5 micrometers in diameter. These elements bypass human respiratory filtering arrays completely, entering deep cardiovascular tracts directly. Continuous validation of these pollution matrices allows individuals to easily mitigate local environmental health risks before exposing themselves during peak micro-particle events.
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h3 className="text-lg font-bold text-white pt-2">4. Ultraviolet (UV) Radiation Scale Mechanics</h3>
-            <p>
-              The international UV Index measures the strength of skin-damaging ultraviolet radiation reaching specific locations at peak solar noon. This index ranges from 0 (minimal exposure hazard) up to extreme bands of 11 and above. UV concentrations shift heavily based on stratospheric ozone layer thickness, current solar elevation parameters, mountain altitude variables, and cloud refraction dynamics. ByteSpin integrates explicit colored warning layers to categorize UV tiers, protecting users from solar degradation events during high-exposure windows.
-            </p>
-          </section>
-
-        </article>
-      </section>
-
-      {/* FAQ Accordion Section */}
-      <section className="max-w-4xl mx-auto px-6 py-8 border-t border-white/10 text-left">
-        <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-violet-400">Frequently Asked Questions</h2>
-        <div className="space-y-3">
-          {[
-            { q: "Is the weather forecast live on ByteSpin?", a: "Yes, our metrics engine queries proxy API server channels continuously to update data indices every hour." },
-            { q: "How accurate are the data loops generated by Open-Meteo?", a: "Open-Meteo parses advanced numerical weather prediction models alongside international data feeds to deliver pinpoint tracking data." },
-            { q: "Can I search for micro rural locations globally?", a: "Yes. The underlying integrated geocoding layout maps coordinates borderless across any verified global municipality." },
-            { q: "Is the tracking utility completely free?", a: "Yes, ByteSpin offers absolute open access to weather matrix rows, AQI metrics, and indexes with no transactional paywall parameters." },
-            { q: "Why use an internal API route instead of browser-side requests?", a: " Bypassing standard browser-side fetching eliminates CORS blocks, guarantees search bot accessibility, and prevents Soft 404 tracking indexing failures on Google." }
-          ].map((item, idx) => (
-            <div key={idx} className="border border-white/10 bg-white/5 rounded-xl overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                className="w-full flex justify-between items-center px-4 sm:px-5 py-3.5 font-bold text-sm sm:text-base hover:bg-white/5 transition-colors text-left"
-              >
-                <span className="pr-4">{item.q}</span>
-                <span className="text-violet-400 shrink-0">{openFaq === idx ? "−" : "+"}</span>
-              </button>
-              {openFaq === idx && (
-                <div className="px-4 sm:px-5 pb-3.5 pt-1.5 text-gray-300 text-xs sm:text-sm leading-relaxed border-t border-white/5">
-                  {item.a}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Roadmapped Utility App Footer Deck */}
-      <footer className="max-w-4xl mx-auto px-6 pt-10 pb-20 text-center border-t border-white/10 space-y-6">
-        <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-xs sm:text-sm font-bold text-violet-400">
-          <a href="/weather" className="text-white border-b-2 border-violet-500 pb-0.5">🌦️ Weather</a>
-          <span className="text-white/10">|</span>
-          <a href="/currency-converter" className="hover:text-violet-300 transition-colors">💵 Currency</a>
-          <span className="text-white/10">|</span>
-          <a href="/unit-converter" className="hover:text-violet-300 transition-colors">📐 Unit Converter</a>
-          <span className="text-white/10">|</span>
-          <a href="/timezone" className="hover:text-violet-300 transition-colors">🕒 Time Zone</a>
-          <span className="text-white/10">|</span>
-          <a href="/world-clock" className="hover:text-violet-300 transition-colors">🌍 World Clock</a>
-        </div>
-        <p className="text-[11px] text-gray-600 font-medium">© 2026 ByteSpin by Bytecraft Studio. All rights reserved.</p>
-      </footer>
+      <SeoContent />
+      <FAQ />
     </main>
   );
 }
