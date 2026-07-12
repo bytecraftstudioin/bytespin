@@ -1,14 +1,74 @@
-import React from 'react';
+import { JSX } from "react";
 
-export const getWeatherDetails = (code: number): { text: string; icon: React.JSX.Element } => {
-  const cloudIcon = <svg className="w-8 h-8 text-blue-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>;
-  const sunIcon = <svg className="w-8 h-8 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z" /></svg>;
-  
-  const mapping: Record<number, { text: string; icon: React.JSX.Element }> = {
-    0: { text: "Clear Sky", icon: sunIcon },
-    1: { text: "Mainly Clear", icon: cloudIcon },
-    2: { text: "Partly Cloudy", icon: cloudIcon },
-    3: { text: "Overcast", icon: cloudIcon },
-  };
-  return mapping[code] || { text: "Scattered Clouds", icon: cloudIcon };
-};
+export interface WeatherInfo {
+  text: string;
+  icon: JSX.Element;
+}
+const Sun = (
+  <svg
+    className="w-8 h-8 text-yellow-400"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <circle cx="12" cy="12" r="5" />
+  </svg>
+);
+
+const Cloud = (
+  <svg
+    className="w-8 h-8 text-slate-300"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M19 18H7a4 4 0 010-8 5 5 0 019.6-1.4A4 4 0 1119 18z" />
+  </svg>
+);
+
+const Rain = (
+  <svg
+    className="w-8 h-8 text-sky-400"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M7 18l1 2M12 18l1 2M17 18l1 2" />
+  </svg>
+);
+
+export function getWeatherDetails(code: number): WeatherInfo {
+
+switch(code){
+
+case 0:
+return{
+text:"Clear Sky",
+icon:Sun
+}
+
+case 1:
+case 2:
+case 3:
+return{
+text:"Cloudy",
+icon:Cloud
+}
+
+case 51:
+case 53:
+case 55:
+case 61:
+case 63:
+case 65:
+return{
+text:"Rain",
+icon:Rain
+}
+
+default:
+return{
+text:"Unknown",
+icon:Cloud
+}
+
+}
+
+}

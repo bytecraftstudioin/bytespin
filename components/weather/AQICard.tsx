@@ -1,12 +1,104 @@
+"use client";
+
 import { WeatherData } from "@/lib/weather";
 
-export default function AQICard({ data }: { data: WeatherData }) {
+interface Props {
+  data: WeatherData;
+}
+
+export default function AQICard({ data }: Props) {
+  const getAQI = (aqi: number) => {
+    if (aqi <= 20)
+      return {
+        label: "Good",
+        color: "bg-emerald-600",
+      };
+
+    if (aqi <= 40)
+      return {
+        label: "Fair",
+        color: "bg-green-500",
+      };
+
+    if (aqi <= 60)
+      return {
+        label: "Moderate",
+        color: "bg-yellow-500",
+      };
+
+    if (aqi <= 80)
+      return {
+        label: "Poor",
+        color: "bg-orange-500",
+      };
+
+    return {
+      label: "Very Poor",
+      color: "bg-red-600",
+    };
+  };
+
+  const air = getAQI(data.aqi);
+
   return (
-    <div className="p-4 bg-slate-950/40 border border-white/5 rounded-2xl grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-      <div><span className="text-[10px] text-gray-400 uppercase font-bold block">AQI Index</span><span className="text-sm font-bold text-green-400">{data.aqi}</span></div>
-      <div><span className="text-[10px] text-gray-400 uppercase font-bold block">PM2.5 Matrix</span><span className="text-sm font-bold text-gray-200 font-mono">{data.pm25} µg/m³</span></div>
-      <div><span className="text-[10px] text-gray-400 uppercase font-bold block">PM10 Matrix</span><span className="text-sm font-bold text-gray-200 font-mono">{data.pm10} µg/m³</span></div>
-      <div><span className="text-[10px] text-gray-400 uppercase font-bold block">UV Radiation</span><span className="text-xs font-bold text-amber-400">Level {data.uvIndex}</span></div>
+    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
+
+      <h2 className="text-xl font-black mb-5">
+        🌫 Air Quality
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* AQI */}
+
+        <div
+          className={`${air.color} rounded-2xl p-6 text-center`}
+        >
+          <p className="uppercase text-xs opacity-80">
+            Air Quality Index
+          </p>
+
+          <h2 className="text-5xl font-black mt-3">
+            {data.aqi}
+          </h2>
+
+          <p className="mt-3 font-bold">
+            {air.label}
+          </p>
+        </div>
+
+        {/* Pollutants */}
+
+        <div className="space-y-4">
+
+          <div className="bg-slate-900 rounded-2xl p-4">
+
+            <p className="text-xs text-gray-400 uppercase">
+              PM2.5
+            </p>
+
+            <h3 className="text-2xl font-black mt-2 text-emerald-400">
+              {data.pm25} μg/m³
+            </h3>
+
+          </div>
+
+          <div className="bg-slate-900 rounded-2xl p-4">
+
+            <p className="text-xs text-gray-400 uppercase">
+              PM10
+            </p>
+
+            <h3 className="text-2xl font-black mt-2 text-sky-400">
+              {data.pm10} μg/m³
+            </h3>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }

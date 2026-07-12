@@ -1,26 +1,90 @@
 "use client";
+
 import { useState } from "react";
 
+const faqs = [
+  {
+    question: "How accurate is this weather forecast?",
+    answer:
+      "Our weather data is powered by Open-Meteo and updates regularly using trusted meteorological models."
+  },
+  {
+    question: "Can I search weather for any city?",
+    answer:
+      "Yes. You can search thousands of cities worldwide and instantly view live weather conditions."
+  },
+  {
+    question: "What is AQI?",
+    answer:
+      "AQI (Air Quality Index) measures how clean or polluted the air is. Lower values indicate better air quality."
+  },
+  {
+    question: "What does 'Feels Like' temperature mean?",
+    answer:
+      "Feels Like represents the perceived temperature after considering humidity, wind speed and other atmospheric conditions."
+  },
+  {
+    question: "How often is weather data updated?",
+    answer:
+      "Weather information is refreshed frequently using real-time forecast data from Open-Meteo."
+  },
+  {
+    question: "Can I use this weather tool on mobile?",
+    answer:
+      "Yes. The weather dashboard is fully responsive and optimized for desktop, tablet and mobile devices."
+  },
+];
+
 export default function FAQ() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const faqs = [
-    { q: "Is the weather forecast live on ByteSpin?", a: "Yes, our metrics engine queries proxy API server channels continuously to update data indices every hour." },
-    { q: "Why use an internal API route instead of browser-side requests?", a: "Bypassing standard browser-side fetching eliminates CORS blocks, guarantees search bot accessibility, and prevents Soft 404 tracking indexing failures on Google." }
-  ];
+  const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="w-full max-w-4xl mx-auto py-8 border-t border-white/10 text-left">
-      <h2 className="text-xl font-bold mb-6 text-center text-violet-400">Frequently Asked Questions</h2>
-      <div className="space-y-3">
-        {faqs.map((item, idx) => (
-          <div key={idx} className="border border-white/10 bg-white/5 rounded-xl overflow-hidden">
-            <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex justify-between items-center px-5 py-4 font-bold text-sm text-left">
-              <span>{item.q}</span><span>{openFaq === idx ? "−" : "+"}</span>
+    <section className="max-w-5xl mx-auto px-4 py-16">
+
+      <h2 className="text-3xl font-black text-center mb-10">
+        Frequently Asked Questions
+      </h2>
+
+      <div className="space-y-4">
+
+        {faqs.map((faq, index) => (
+
+          <div
+            key={index}
+            className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden"
+          >
+
+            <button
+              onClick={() =>
+                setOpen(open === index ? null : index)
+              }
+              className="w-full flex justify-between items-center px-6 py-5 text-left"
+            >
+
+              <span className="font-bold">
+                {faq.question}
+              </span>
+
+              <span className="text-2xl">
+                {open === index ? "−" : "+"}
+              </span>
+
             </button>
-            {openFaq === idx && <div className="px-5 pb-4 text-gray-400 text-sm border-t border-white/5 pt-2">{item.a}</div>}
+
+            {open === index && (
+
+              <div className="px-6 pb-5 text-gray-300 leading-7 border-t border-white/10">
+                {faq.answer}
+              </div>
+
+            )}
+
           </div>
+
         ))}
+
       </div>
+
     </section>
   );
 }

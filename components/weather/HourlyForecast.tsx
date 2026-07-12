@@ -1,19 +1,57 @@
+"use client";
+
 import { WeatherData } from "@/lib/weather";
 import { getWeatherDetails } from "@/lib/weatherCodes";
 
-export default function HourlyForecast({ data }: { data: WeatherData }) {
+interface Props {
+  data: WeatherData;
+}
+
+export default function HourlyForecast({ data }: Props) {
   return (
-    <div className="bg-slate-950/30 border border-white/10 rounded-3xl p-5 sm:p-6">
-      <h3 className="text-sm font-bold text-violet-400 mb-4 uppercase tracking-wider">Hourly Outlook</h3>
-      <div className="flex gap-3 overflow-x-auto pb-2">
-        {data.hourly.map((h, i) => (
-          <div key={i} className="min-w-[85px] bg-white/5 border border-white/5 rounded-2xl p-3 text-center flex flex-col items-center gap-2">
-            <span className="text-[10px] text-gray-400 font-bold">{h.time}</span>
-            {getWeatherDetails(h.code).icon}
-            <span className="text-sm font-black font-mono">{h.temp}°C</span>
-          </div>
-        ))}
+    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
+
+      <h2 className="text-xl font-black mb-5">
+        🕒 Hourly Forecast
+      </h2>
+
+      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+
+        {data.hourly.map((hour, index) => {
+
+          const weather = getWeatherDetails(hour.code);
+
+          return (
+
+            <div
+              key={index}
+              className="min-w-[110px] bg-slate-900 rounded-2xl p-4 text-center shrink-0 border border-white/5 hover:border-violet-500 transition-all"
+            >
+
+              <p className="text-sm text-gray-400">
+                {hour.time}
+              </p>
+
+              <div className="flex justify-center my-3">
+                {weather.icon}
+              </div>
+
+              <p className="text-2xl font-black text-emerald-400">
+                {hour.temp}°
+              </p>
+
+              <p className="text-xs text-gray-500 mt-2">
+                {weather.text}
+              </p>
+
+            </div>
+
+          );
+
+        })}
+
       </div>
+
     </div>
   );
 }

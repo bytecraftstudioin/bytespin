@@ -41,6 +41,7 @@ export const metadata = {
       "google-adsense-account": "ca-pub-4162936079798609",
     },
   },
+  metadataBase: new URL("https://bytespin.bytecraftstudio.com"),
 };
 
 export default function RootLayout({
