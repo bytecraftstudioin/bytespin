@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import SpinWheel from "@/components/wheel/SpinWheel";
+import HilltopAd from "@/components/HilltopAd";
 
 export default function Home() {
   return (
@@ -14,7 +15,7 @@ export default function Home() {
           <p className="text-violet-400 font-semibold tracking-widest uppercase mb-4">
             AI Powered Decision Platform
           </p>
-
+<HilltopAd />
 <div className="w-full max-w-5xl h-px bg-white/10 my-20" />
 
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight">
