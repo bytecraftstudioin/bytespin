@@ -15,7 +15,7 @@ export default function Home() {
           <p className="text-violet-400 font-semibold tracking-widest uppercase mb-4">
             AI Powered Decision Platform
           </p>
-<HilltopAd />
+
 <div className="w-full max-w-5xl h-px bg-white/10 my-20" />
 
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight">
@@ -243,7 +243,14 @@ export default function Home() {
         
 
       </section>
-      <footer className="border-t border-white/10 mt-\8">
+
+{/* HilltopAds 300x250 Banner */}
+<div className="w-full flex justify-center my-10">
+  <HilltopAd />
+</div>
+
+
+      <footer className="border-t border-white/10 mt-8">
 
   <div className="max-w-6xl mx-auto px-4 py-10">
 
