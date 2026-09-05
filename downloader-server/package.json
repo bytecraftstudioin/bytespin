@@ -1,0 +1,23 @@
+{
+  "name": "bytespin-downloader-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ByteSpin Downloader Backend",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.18.1",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "playwright": "^1.61.1",
+    "yt-dlp-wrap": "^2.3.12"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

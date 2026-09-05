@@ -39,6 +39,8 @@ export const metadata = {
   verification: {
     other: {
       "google-adsense-account": "ca-pub-4162936079798609",
+      "d101eca8b3b72340f65bbb1aa36d7d2b679f53ee":
+        "d101eca8b3b72340f65bbb1aa36d7d2b679f53ee",
     },
   },
   metadataBase: new URL("https://bytespin.bytecraftstudio.com"),
