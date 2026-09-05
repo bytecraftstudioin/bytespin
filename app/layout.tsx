@@ -56,6 +56,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <meta
+          name="referrer"
+          content="no-referrer-when-downgrade"
+        />
+      </head>
+
       <body className="min-h-full flex flex-col">
         {children}
 
@@ -73,12 +80,13 @@ export default function RootLayout({
             gtag('config', 'G-VEG9ZSP6NK');
           `}
         </Script>
-      <Script
-  async
-  strategy="afterInteractive"
-  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4162936079798609"
-  crossOrigin="anonymous"
-/>
+
+        <Script
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4162936079798609"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   );
